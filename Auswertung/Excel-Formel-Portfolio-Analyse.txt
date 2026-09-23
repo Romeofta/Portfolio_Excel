@@ -1,0 +1,168 @@
+Datum formatieren aus Original Excel-Tabelle
+=DATUM(LINKS(B2;4);TEIL(B2;6;2);TEIL(B2;9;2))
+
+Berechnung Rendite
+=WENN(J2="GESCHLOSSEN";
+I2/F2;
+WENN(J2="OFFEN";
+((G2+K2*E2)-F2-L2)/F2;
+""))
+
+Berechnung aktuelle Gewinn/Verlust
+=WENN(J2="GESCHLOSSEN";
+0;
+WENN(J2="OFFEN";
+((L2*E2)-(K2*E2));
+""))
+
+
+Realisierte Gewinn/Verlust
+=G2
+-(F2-(E2*K2))
+-SUMMEWENNS(Daten!L:L;Daten!G:G;A2;Daten!E:E;"SELL")*-1 
+-SUMMEWENNS(Daten!L:L;Daten!G:G;A2;Daten!E:E;"BUY";Daten!B:B;"<"&MAXWENNS(Daten!B:B;Daten!G:G;A2;Daten!E:E;"SELL"))*-1
+Oder genauer
+=WENN(J2="GESCHLOSSEN";
+G2-F2-H2 + SUMMEWENNS(Daten!K:K;Daten!G:G;A2;Daten!E:E;"DIVIDEND");
+WENN(J2="OFFEN";
+WENN(D2=0;
+0;
+G2+SUMMEWENNS(Daten!K:K;Daten!G:G;A2;Daten!E:E;"DIVIDEND")-(F2-(E2*K2))-H2
+);
+""))
+
+
+Alle Einzahlungen
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_INSTANT_INBOUND")
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_IN")
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"GIFT")
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"DIVIDEND")
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"CUSTOMER_INPAYMENT")
+
+Summe aller negativen Zahlen von allen STOCKs
+=SUMMEWENNS(M:M;"<0";B:B;"STOCK")
+
+Alle Auszahlungen
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_INSTANT_OUTBOUND") 
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_OUT")
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_OUTBOUND")
+
+
+
+Spalten F(type), G(name), H(symbol) und B(Datum) entsprechend anpassen
+
+STOCK-Market Pro Jahr
+##############################################################################################################################################################################
+Einnahmen Gesamt 2025:
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_INSTANT_INBOUND";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31)) 
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_IN";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"GIFT";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31)) 
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"DIVIDEND";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"CUSTOMER_INPAYMENT";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Alle Auszahlungen
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_INSTANT_OUTBOUND";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31)) 
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_OUT";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"TRANSFER_OUTBOUND";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+Gebüren Käufe Gesamt 2025:
+= SUMMEWENNS(Daten!L:L;Daten!E:E;"BUY";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Gebüren Verkäufe Gesamt 2025:
+= SUMMEWENNS(Daten!L:L;Daten!E:E;"SELL";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Gebüren Gesamt 2025:
+= SUMMEWENNS(Daten!L:L;Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Steuern STOCK Gesamt 2025:
+= SUMMEWENNS(Daten!M:M;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Steuern CRYPTO Gesamt 2025:
+= SUMMEWENNS(Daten!M:M;Daten!E:E;"SELL";Daten!F:F;"CRYPTO";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Steuern Gesamt 2025:
+= SUMMEWENNS(Daten!M:M;Daten!E:E;"SELL";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Käufe Gesamt 2025
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
++ SUMMEWENNS(Daten!L:L;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Anteile Käufe Gesamt 2025
+= SUMMEWENNS(Daten!I:I;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Verkäufe Gesamt 2025
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
++ SUMMEWENNS(Daten!L:L;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Verkäufe D-Day
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
++ SUMMEWENNS(Daten!L:L;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
+
+
+Anteile Verkäufe D-Day (Verkäufe am Verkaufsdatum)
+= SUMMEWENNS(Daten!I:I;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
+
+Anteile Verkäufe Gesamt 2025
+= SUMMEWENNS(Daten!I:I;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Steuer Verkäufe D-Day
+= SUMMEWENNS(Daten!M:M;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
+
+
+Steuer Verkäufe Gesamt  2025
+= SUMMEWENNS(Daten!M:M;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Rest-Anteile D-Day
+= SUMMEWENNS(Daten!I:I;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
++ SUMMEWENNS(Daten!I:I;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
+
+
+Rest-Anteile Gesamt 2025
+= SUMMEWENNS(Daten!I:I;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
++ SUMMEWENNS(Daten!I:I;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;12;31))
+
+
+Käufe bis D-Day (Käufe bis zum Verkaufsdatum)
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
++ SUMMEWENNS(Daten!L:L;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
+
+
+Netto Verkäufe D-Day( Verkäufe am Verkaufsdatum Minus Steuer Verkäufe am Verkaufsdatum)
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
++ SUMMEWENNS(Daten!L:L;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
++ SUMMEWENNS(Daten!M:M;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
+
+
+Gewinn/Verlust D-Day(Käufe bis D-Day Minus Verkäufe am D-Day)
+= SUMMEWENNS(Daten!K:K;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
++ SUMMEWENNS(Daten!L:L;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
++ SUMMEWENNS(Daten!K:K;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
++ SUMMEWENNS(Daten!L:L;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
+
+
+Rendite D-Day ( Gewinn/Verlust D-Day geteilt durch Käufe bis D-Day)
+= -(  SUMMEWENNS(Daten!K:K;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
+   + SUMMEWENNS(Daten!L:L;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
+   + SUMMEWENNS(Daten!K:K;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
+   + SUMMEWENNS(Daten!L:L;Daten!E:E;"SELL";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;"="&DATUM(2025;9;24))
+   )
+/
+  (  SUMMEWENNS(Daten!K:K;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
+   + SUMMEWENNS(Daten!L:L;Daten!E:E;"BUY";Daten!F:F;"STOCK";Daten!G:G;"NVIDIA";Daten!H:H;"US67066G1040";Daten!B:B;">="&DATUM(2025;1;1);Daten!B:B;"<="&DATUM(2025;9;24))
+   )
+
+
+CRYPTO-Market
+####################################################################################################################################################################################
